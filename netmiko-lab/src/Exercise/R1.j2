@@ -1,0 +1,22 @@
+hostname R1
+no ip domain-lookup
+interface loopback 0
+ip address 150.1.1.1 255.255.255.255
+interface GigabitEthernet2
+no shutdown
+{% for net in data.rip1 %} 
+    {% for interface in data.interfaces1 %} 
+        interface GigabitEthernet2.{{interface.id}}
+        encapsulation dot1Q {{ interface.id }}
+        ip address {{interface.ip}}
+    {% endfor %}  
+    router rip 
+    version 2 
+    network {{net.subnet}}
+
+    
+    no auto-summary     
+{% endfor %}
+
+
+
